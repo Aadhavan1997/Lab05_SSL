@@ -44,7 +44,8 @@ namespace cs251
     /**  The is the constructor 
      * This is the documentation block for the constructor.
      */ 
-
+    extern float kval;
+    extern int sign;
     dominos_t::dominos_t()
     {
         //Ground
@@ -368,7 +369,7 @@ namespace cs251
     }
     void dominos_t::applyForces()
     {
-        float k=40,rsq;
+        float rsq,k=sign*kval;
         b2Vec2 force(0,0);
         for(int j=0;j<nMet;j++)
         {

@@ -53,6 +53,7 @@ namespace cs251
   extern cs251::base_sim_t* test;
   extern cs251::settings_t settings;
   extern const int32 frame_period;
+  float kval=25;
   extern float settings_hz;
   extern int32 width;
   extern int32 height;
@@ -82,7 +83,9 @@ void create_glui_ui(void)
     glui->add_spinner("Sim steps per frame", GLUI_SPINNER_FLOAT, &settings_hz);
   hertzSpinner->set_float_limits(5.0f, 200.0f);
 
-
+  GLUI_Spinner* kvalue =
+    glui->add_spinner("K value for force", GLUI_SPINNER_FLOAT, &kval);
+  kvalue->set_float_limits(1.0f, 500.0f);
   
   new GLUI_Column( glui, false );
   glui->add_statictext("Simulation Parameters"); 

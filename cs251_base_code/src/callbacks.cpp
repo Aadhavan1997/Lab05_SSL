@@ -24,6 +24,7 @@ namespace cs251
   int32 test_selection = 0;
   int32 test_count = 0;
   cs251::sim_t* entry;
+  int sign=1;
   cs251::base_sim_t* test;
   cs251::settings_t settings;
   int32 width = 640;
@@ -98,6 +99,10 @@ namespace cs251
     case 'z':
       view_zoom = b2Min(1.1f * view_zoom, 20.0f);
       resize_cb(width, height);
+      break;
+
+    case 't':
+      sign-=2*sign;
       break;
       
     //! Press 'x' to zoom in.
@@ -185,6 +190,7 @@ namespace cs251
     //! Use the mouse to move things around - figure out how this works?
     if (button == GLUT_LEFT_BUTTON)
       {
+        sign=-1*sign;
 	int mod = glutGetModifiers();
 	b2Vec2 p = convert_screen_to_world(x, y);
 	if (state == GLUT_DOWN)
