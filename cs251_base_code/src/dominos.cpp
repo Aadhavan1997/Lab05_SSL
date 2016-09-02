@@ -33,6 +33,8 @@
 #endif
 
 #include <cstring>
+#include <math.h>
+#include <iostream>
 using namespace std;
 
 #include "dominos.hpp"
@@ -58,7 +60,7 @@ namespace cs251
       b1 = m_world->CreateBody(&bd); 
       b1->CreateFixture(&shape, 0.0f);
     }
-          
+    /*      
     //Top horizontal shelf
     {
       b2PolygonShape shape;
@@ -313,7 +315,74 @@ namespace cs251
       fd3->shape = &shape2;
       body3->CreateFixture(fd3);
     }
-  }
+    
+    */
+    //A metallic ball
+	
+      b2CircleShape mcircle;
+      mcircle.m_radius = 1;
+	
+      b2FixtureDef mballfd;
+      mballfd.shape = &mcircle;
+      mballfd.density = 0.01f;
+      mballfd.friction = 0.0f;
+      mballfd.restitution = 0.0f;
+	
+	  b2BodyDef mballbd;
+	  mballbd.type = b2_dynamicBody;
+	  mballbd.position.Set(-5.0f, 34);
+	  mspherebody = m_world->CreateBody(&mballbd);
+	  mspherebody->CreateFixture(&mballfd);
+      
+    //A magnetic ball
+	
+      b2CircleShape circle;
+      circle.m_radius = 2;
+	
+      b2FixtureDef ballfd;
+      ballfd.shape = &circle;
+      ballfd.density = 0.01f;
+      ballfd.friction = 0.0f;
+      ballfd.restitution = 0.0f;
+	
+	  b2BodyDef ballbd;
+	  ballbd.type = b2_staticBody;
+	  ballbd.position.Set(15.0f, 26.6f);
+	  spherebody = m_world->CreateBody(&ballbd);
+	  spherebody->CreateFixture(&ballfd);
+  }  
+    void dominos_t::step(settings_t* settings)
+    {
+        base_sim_t::step(settings);
+        applyForces();
+    }
+    void dominos_t::applyForces()
+    {
+        float k=150,rsq;
+        b2Vec2 c1 = spherebody->GetWorldCenter();
+        b2Vec2 c2 = mspherebody->GetWorldCenter();
+        float dx=c2.x-c1.x,dy=c2.y-c1.y;
+        rsq = dx*dx + dy*dy;
+        //std::cout<<"rsq"<<rsq<<'\n';
+        float f=k/rsq;
+        float theta;
+        if(dx!=0)
+        {
+            theta = atan(dy/dx);
+            if(dx<0 and dy>0)
+                theta += 3.14;
+            else if(dy<0 and dx<0)
+                theta += -3.14;
+        }
+        else
+            theta = (dy>0)?3.14/2:-3.14/2;
+        float fx = -f*cos(theta), fy = -f*sin(theta);
+        /*if(dx>0)
+            fx *= -1;
+        if(dy>0)
+            fy *= -1;*/
+        mspherebody->ApplyForceToCenter( b2Vec2(fx,fy),true);
+    }
 
   sim_t *sim = new sim_t("Dominos", dominos_t::create);
 }

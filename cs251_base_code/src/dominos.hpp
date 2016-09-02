@@ -33,8 +33,11 @@ namespace cs251
   {
   public:
     
+    b2Body* spherebody;
+    b2Body* mspherebody;
+    void step(settings_t* settings);
+    void applyForces();    
     dominos_t();
-    
     static base_sim_t* create()
     {
       return new dominos_t;
